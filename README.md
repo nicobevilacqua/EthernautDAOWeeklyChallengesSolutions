@@ -65,6 +65,10 @@ Challenge File [here](./test/03-CarMarket.test.ts)
 
 Run it with `yarn car-market`
 
+### Solution Write Up
+
+There are two different balances. On the flashLoan function the balance sent to the caller is market balance (through delegatecall) but the validation is being made using the factory balance. So, you can get all market balance for free and purchase a second car using it.
+
 ## Vending Machine
 
 <img width="575" alt="image" src="https://user-images.githubusercontent.com/5586894/193433559-1c063708-daca-4fc6-a591-251f6125b516.png">
